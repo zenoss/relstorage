@@ -364,6 +364,19 @@ history_preserving_schema = """
             zoid        NUMBER(20) NOT NULL PRIMARY KEY,
             prev_tid    NUMBER(20) NOT NULL
         );
+
+# Zenoss Relations
+
+    mysql:
+        CREATE TABLE relations (
+            id MEDIUMINT NOT NULL AUTO_INCREMENT,
+            uid CHAR(255) NOT NULL,
+            name CHAR(64) NOT NULL,
+            remote_uid CHAR(255) NOT NULL,
+            PRIMARY KEY (id)
+        ) ENGINE = InnoDB;
+        CREATE INDEX relations_uid_name ON relations (uid, name);
+
 """
 
 history_preserving_init = """
@@ -698,6 +711,19 @@ history_free_schema = """
             zoid        NUMBER(20) NOT NULL PRIMARY KEY,
             keep_tid    NUMBER(20) NOT NULL
         );
+
+# Zenoss Relations
+
+    mysql:
+        CREATE TABLE relations (
+            id MEDIUMINT NOT NULL AUTO_INCREMENT,
+            uid CHAR(255) NOT NULL,
+            name CHAR(64) NOT NULL,
+            remote_uid CHAR(255) NOT NULL,
+            PRIMARY KEY (id)
+        ) ENGINE = InnoDB;
+        CREATE INDEX relations_uid_name ON relations (uid, name);
+
 """
 
 history_free_init = """

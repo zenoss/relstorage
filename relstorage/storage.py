@@ -299,6 +299,23 @@ class RelStorage(
             else:
                 log.info("Reconnected.")
 
+    def _with_load(self, f, *args, **kw):
+        """Call a function with the load connection and cursor."""
+        if self._load_cursor is None:
+            self._open_load_connection()
+        try:
+            return f(self._load_conn, self._load_cursor, *args, **kw)
+        except self._adapter.connmanager.disconnected_exceptions, e:
+            log.info("Reconnecting load_conn: %s", e)
+            self._drop_load_connection()
+            try:
+                self._open_load_connection()
+            except:
+                log.exception("Reconnect failed.")
+                raise
+            log.info("Reconnected.")
+            return f(self._load_conn, self._load_cursor, *args, **kw)
+
     def _with_store(self, f, *args, **kw):
         """Call a function with the store connection and cursor."""
         if self._store_cursor is None:
