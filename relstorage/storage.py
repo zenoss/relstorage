@@ -333,7 +333,12 @@ class RelStorage(UndoLogCompatible,
         if self._load_conn is not None:
             try:
                 self._load_conn.rollback()
-            except:
+            except self._adapter.connmanager.disconnected_exceptions:
+                self._drop_load_connection()
+                self._cache.clear()
+                log.info("Reconnecting load_conn: Idle connection dropped")
+                self._open_load_connection()
+            except Exception:
                 self._drop_load_connection()
                 raise
             self._load_transaction_open = ''
@@ -355,8 +360,8 @@ class RelStorage(UndoLogCompatible,
                     self._load_conn, self._load_cursor)
                 self._load_transaction_open = 'active'
             return f(self._load_conn, self._load_cursor, *args, **kw)
-        except self._adapter.connmanager.disconnected_exceptions as e:
-            log.warning("Reconnecting load_conn: %s", e)
+        except self._adapter.connmanager.disconnected_exceptions, e:
+            log.info("Reconnecting load_conn: %s", e)
             self._drop_load_connection()
             try:
                 self._open_load_connection()
@@ -388,8 +393,8 @@ class RelStorage(UndoLogCompatible,
         try:
             self._adapter.connmanager.restart_store(
                 self._store_conn, self._store_cursor)
-        except self._adapter.connmanager.disconnected_exceptions as e:
-            log.warning("Reconnecting store_conn: %s", e)
+        except self._adapter.connmanager.disconnected_exceptions, e:
+            log.info("Reconnecting store_conn: %s", e)
             self._drop_store_connection()
             try:
                 self._open_store_connection()
@@ -410,7 +415,7 @@ class RelStorage(UndoLogCompatible,
                 # If transaction commit is in progress, it's too late
                 # to reconnect.
                 raise
-            log.warning("Reconnecting store_conn: %s", e)
+            log.info("Reconnecting store_conn: %s", e)
             self._drop_store_connection()
             try:
                 self._open_store_connection()
@@ -512,7 +517,7 @@ class RelStorage(UndoLogCompatible,
         """
         cursor = self._load_cursor
         adapter = self._adapter
-        logfunc = log.warning
+        logfunc = log.debug
         msg = ["POSKeyError on oid %d: %s" % (oid_int, reason)]
 
         if adapter.keep_history:
