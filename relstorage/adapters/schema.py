@@ -127,7 +127,7 @@ history_preserving_schema = """
             md5         CHAR(32) CHARACTER SET ascii,
             state_size  BIGINT NOT NULL,
             state       LONGBLOB
-        ) ENGINE = InnoDB;
+        ) ENGINE = InnoDB row_format=COMPRESSED;
         CREATE INDEX object_state_tid ON object_state (tid);
         CREATE INDEX object_state_prev_tid ON object_state (prev_tid);
 
@@ -549,7 +549,7 @@ history_free_schema = """
                         CHECK (tid > 0),
             state_size  BIGINT NOT NULL,
             state       LONGBLOB
-        ) ENGINE = InnoDB;
+        ) ENGINE = InnoDB row_format=COMPRESSED;
         CREATE INDEX object_state_tid ON object_state (tid);
 
         CREATE TABLE blob_chunk (
