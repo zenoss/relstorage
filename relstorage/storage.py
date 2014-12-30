@@ -231,7 +231,12 @@ class RelStorage(
         if self._load_conn is not None:
             try:
                 self._load_conn.rollback()
-            except:
+            except self._adapter.connmanager.disconnected_exceptions:
+                self._drop_load_connection()
+                self._cache.clear()
+                log.info("Reconnecting load_conn: Idle connection dropped")
+                self._open_load_connection()
+            except Exception:
                 self._drop_load_connection()
                 raise
             self._load_transaction_open = False
@@ -253,7 +258,7 @@ class RelStorage(
                 self._load_transaction_open = True
             return f(self._load_conn, self._load_cursor, *args, **kw)
         except self._adapter.connmanager.disconnected_exceptions, e:
-            log.warning("Reconnecting load_conn: %s", e)
+            log.info("Reconnecting load_conn: %s", e)
             self._drop_load_connection()
             try:
                 self._open_load_connection()
@@ -284,7 +289,7 @@ class RelStorage(
             self._adapter.connmanager.restart_store(
                 self._store_conn, self._store_cursor)
         except self._adapter.connmanager.disconnected_exceptions, e:
-            log.warning("Reconnecting store_conn: %s", e)
+            log.info("Reconnecting store_conn: %s", e)
             self._drop_store_connection()
             try:
                 self._open_store_connection()
@@ -305,7 +310,7 @@ class RelStorage(
                 # If transaction commit is in progress, it's too late
                 # to reconnect.
                 raise
-            log.warning("Reconnecting store_conn: %s", e)
+            log.info("Reconnecting store_conn: %s", e)
             self._drop_store_connection()
             try:
                 self._open_store_connection()
@@ -406,7 +411,7 @@ class RelStorage(
         """
         cursor = self._load_cursor
         adapter = self._adapter
-        logfunc = log.warning
+        logfunc = log.debug
         msg = ["POSKeyError on oid %d: %s" % (oid_int, reason)]
 
         if adapter.keep_history:
