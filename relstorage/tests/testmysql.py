@@ -138,6 +138,13 @@ db_names = {
 
 def test_suite():
     try:
+        # attempt to import MySQLdb
+        try:
+            import MySQLdb
+        except ImportError:
+            # use all pymysql as an alternative
+            import pymysql
+            pymysql.install_as_MySQLdb()
         import MySQLdb
     except ImportError, e:
         import warnings

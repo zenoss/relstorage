@@ -49,7 +49,15 @@ load_infile
 """
 
 import logging
-import MySQLdb
+# attempt to import MySQLdb
+try:
+    import MySQLdb
+except ImportError:
+    # use all pymysql as an alternative
+    import pymysql
+    pymysql.install_as_MySQLdb()
+    import MySQLdb
+
 from zope.interface import implements
 
 from relstorage.adapters.connmanager import AbstractConnectionManager
