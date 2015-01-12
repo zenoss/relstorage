@@ -29,7 +29,7 @@ class MySQLStats(AbstractStats):
         """Returns the approximate size of the database in bytes"""
         conn, cursor = self.connmanager.open()
         try:
-            cursor.execute("SHOW TABLE STATUS")
+            cursor.execute('SHOW TABLE STATUS WHERE Comment != "VIEW"')
             description = [i[0] for i in cursor.description]
             rows = cursor.fetchall()
         finally:
