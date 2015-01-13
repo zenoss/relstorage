@@ -1,3 +1,17 @@
+1.5.1.1 (?) - Zenoss-owned
+
+- Connection patch. back to relstorage
+  Fixes #29366: Add a log message and whatnot when the connection is recreated.
+  Fixes ZEN-949: It is safe to log relstorage POSKeyError messages at debug level.
+
+- Add relstorage patch to use pymysql
+
+- Fixes ZEN-3305: object_state table should use compressed row_format
+
+- Fixes ZEN-9150: release commit lock after filling object_refs table
+
+- Don't include VIEW statuses when summing size - they are always Null
+
 1.5.1 (2011-11-12)
 ------------------
 
