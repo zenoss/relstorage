@@ -2,6 +2,15 @@
  Changes
 =========
 
+2.0.0.1 (?) - Zenoss-owned - rebased from our local branch.
+
+- Connection patch. back to relstorage
+  Fixes #29366: Add a log message and whatnot when the connection is recreated.
+  Fixes ZEN-949: It is safe to log relstorage POSKeyError messages at debug level.
+
+- Fixes ZEN-3305: object_state table should use compressed row_format
+
+- Don't include VIEW statuses when summing size - they are always Null
 
 2.0.0 (2016-12-23)
 ==================
