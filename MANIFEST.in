@@ -6,6 +6,7 @@ include appveyor.yml
 include .pylintrc
 include BUILDOUT.rst
 include CHANGES.rst
+include README.rst
 include .landscape.yml
 recursive-include .travis *
 
