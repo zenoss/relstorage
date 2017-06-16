@@ -2,7 +2,15 @@
  Changes
 =========
 
-2.0.0.1 (?) - Zenoss-owned - rebased from our local branch.
+2.0.0.2
+
+- https://jira.zenoss.com/browse/ZEN-25256
+
+  Cherry-picked from https://github.com/zodb/relstorage/pull/162
+  MySQL temporary tables now use the InnoDB engine instead of MyISAM.
+  See :pr:`162`.
+
+2.0.0.1 - Zenoss-owned - rebased from our local branch.
 
 - Connection patch. back to relstorage
   Fixes #29366: Add a log message and whatnot when the connection is recreated.
