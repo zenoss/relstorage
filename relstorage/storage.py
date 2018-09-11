@@ -333,12 +333,7 @@ class RelStorage(UndoLogCompatible,
         if self._load_conn is not None:
             try:
                 self._load_conn.rollback()
-            except self._adapter.connmanager.disconnected_exceptions:
-                self._drop_load_connection()
-                self._cache.clear()
-                log.info("Reconnecting load_conn: Idle connection dropped")
-                self._open_load_connection()
-            except Exception:
+            except:
                 self._drop_load_connection()
                 raise
             self._load_transaction_open = ''
