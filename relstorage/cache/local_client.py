@@ -44,7 +44,7 @@ class LocalClient(object):
     _bucket_type = LocalClientBucket
 
     def __init__(self, options, prefix=None):
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()
         self.options = options
         self.prefix = prefix or ''
         # XXX: The calc for limit is substantially smaller
